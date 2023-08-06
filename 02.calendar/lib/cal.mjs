@@ -44,13 +44,11 @@ function putsTop(time) {
   let ym = time.monthLong + " " + time.year;
   let space = Math.trunc((20 - ym.length) / 2);
 
-  //トップ部分を出力する
   console.log(ym.padStart(space + ym.length));
   console.log(day_of_week);
 }
 
 function putsBody(date) {
-  //daysを改行しつつ、ボディ部分を出力していく
   date.forEach(function (element, index) {
     process.stdout.write(element + " ");
     if ((index + 1) % 7 == 0) {
