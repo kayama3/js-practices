@@ -3,7 +3,7 @@ import minimist from "minimist";
 
 let argv = minimist(process.argv.slice(2));
 
-function Exec(argv) {
+function exec(argv) {
   let time = createTime(argv);
   let date = formatDays(time);
 
@@ -59,4 +59,4 @@ function putsBody(date) {
   });
 }
 
-Exec(argv);
+exec(argv);
