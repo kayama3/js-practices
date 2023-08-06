@@ -1,27 +1,27 @@
 import { DateTime } from "luxon";
 import minimist from "minimist";
 
-let argv = minimist(process.argv.slice(2));
+const argv = minimist(process.argv.slice(2));
 
 function exec(argv) {
-  let time = createTime(argv);
-  let date = formatDays(time);
+  const time = createTime(argv);
+  const date = formatDays(time);
 
   putsTop(time);
   putsBody(date);
 }
 
 function createTime(argv) {
-  let datebox = { y: DateTime.now().year, m: DateTime.now().month };
-  let year = argv.y == undefined ? datebox.y : argv.y;
-  let month = argv.m == undefined ? datebox.m : argv.m;
+  const datebox = { y: DateTime.now().year, m: DateTime.now().month };
+  const year = argv.y == undefined ? datebox.y : argv.y;
+  const month = argv.m == undefined ? datebox.m : argv.m;
   return DateTime.local(year, month);
 }
 
 function formatDays(time) {
-  let days = [];
-  let first = time.startOf("month");
-  let last = time.endOf("month");
+  const days = [];
+  const first = time.startOf("month");
+  const last = time.endOf("month");
 
   //1桁の日付を整形して、daysに入れていく
   for (let i = first.day; i <= last.day; i++) {
@@ -40,9 +40,9 @@ function formatDays(time) {
 }
 
 function putsTop(time) {
-  let day_of_week = "Su Mo Tu We Th Fr Sa";
-  let ym = time.monthLong + " " + time.year;
-  let space = Math.trunc((20 - ym.length) / 2);
+  const day_of_week = "Su Mo Tu We Th Fr Sa";
+  const ym = time.monthLong + " " + time.year;
+  const space = Math.trunc((20 - ym.length) / 2);
 
   console.log(ym.padStart(space + ym.length));
   console.log(day_of_week);
