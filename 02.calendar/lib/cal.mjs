@@ -25,11 +25,12 @@ function formatDays(time) {
   const last_of_month = time.endOf("month");
 
   //1桁の日付を整形して、daysに入れていく
-  for (let i = first_of_month.day; i <= last_of_month.day; i++) {
-    if (String(i).length == 1) {
-      i = " " + i;
+  for (let i = 1; i <= last_of_month.day; i++) {
+    let day = i;
+    if (String(day).length == 1) {
+      day = " " + day;
     }
-    days.push(i);
+    days.push(day);
   }
 
   //月初の曜日に合わせて、空白を設ける
