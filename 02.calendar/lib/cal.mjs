@@ -5,10 +5,10 @@ const argv = minimist(process.argv.slice(2));
 
 function exec(argv) {
   const time = createTime(argv);
-  const date = formatDays(time);
+  const days = formatDays(time);
 
   putsTop(time);
-  putsBody(date);
+  putsBody(days);
 }
 
 function createTime(argv) {
@@ -21,11 +21,11 @@ function createTime(argv) {
 
 function formatDays(time) {
   const days = [];
-  const first = time.startOf("month");
-  const last = time.endOf("month");
+  const first_of_month = time.startOf("month");
+  const last_of_month = time.endOf("month");
 
   //1桁の日付を整形して、daysに入れていく
-  for (let i = first.day; i <= last.day; i++) {
+  for (let i = first_of_month.day; i <= last_of_month.day; i++) {
     if (String(i).length == 1) {
       i = " " + i;
     }
@@ -33,7 +33,7 @@ function formatDays(time) {
   }
 
   //月初の曜日に合わせて、空白を設ける
-  for (let i = 1; i <= first.weekday; i++) {
+  for (let i = 1; i <= first_of_month.weekday; i++) {
     days.unshift("  ");
   }
 
@@ -42,15 +42,15 @@ function formatDays(time) {
 
 function putsTop(time) {
   const day_of_week = "Su Mo Tu We Th Fr Sa";
-  const ym = time.monthLong + " " + time.year;
-  const space = Math.trunc((20 - ym.length) / 2);
+  const year_and_month = time.monthLong + " " + time.year;
+  const space = Math.trunc((20 - year_and_month.length) / 2);
 
-  console.log(ym.padStart(space + ym.length));
+  console.log(year_and_month.padStart(space + year_and_month.length));
   console.log(day_of_week);
 }
 
-function putsBody(date) {
-  date.forEach(function (element, index) {
+function putsBody(days) {
+  days.forEach(function (element, index) {
     process.stdout.write(element + " ");
     if ((index + 1) % 7 == 0) {
       process.stdout.write("\n");
