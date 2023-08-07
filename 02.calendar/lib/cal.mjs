@@ -43,9 +43,9 @@ function formatDays(time) {
 function putsTop(time) {
   const day_of_week = "Su Mo Tu We Th Fr Sa";
   const year_and_month = time.monthLong + " " + time.year;
-  const space = Math.trunc((20 - year_and_month.length) / 2);
+  const space = Math.trunc((20 - year_and_month.length) / 2) + year_and_month.length;
 
-  console.log(year_and_month.padStart(space + year_and_month.length));
+  console.log(year_and_month.padStart(space));
   console.log(day_of_week);
 }
 
