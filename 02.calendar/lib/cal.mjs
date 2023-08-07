@@ -12,9 +12,10 @@ function exec(argv) {
 }
 
 function createTime(argv) {
-  const datebox = { y: DateTime.now().year, m: DateTime.now().month };
-  const year = argv.y == undefined ? datebox.y : argv.y;
-  const month = argv.m == undefined ? datebox.m : argv.m;
+  const now_year = DateTime.now().year;
+  const now_month = DateTime.now().month;
+  const year = argv.y == undefined ? now_year : argv.y;
+  const month = argv.m == undefined ? now_month : argv.m;
   return DateTime.local(year, month);
 }
 
