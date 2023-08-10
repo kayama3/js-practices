@@ -27,9 +27,7 @@ function formatDays(time) {
   //1桁の日付を整形して、daysに入れていく
   for (let i = 1; i <= last_of_month.day; i++) {
     let day = i;
-    if (String(day).length == 1) {
-      day = " " + day;
-    }
+    day = String(day).padStart(2, " ");
     days.push(day);
   }
 
