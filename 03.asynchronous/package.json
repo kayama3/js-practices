@@ -6,8 +6,10 @@
   "devDependencies": {
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
-    "prettier": "^2.7.1",
-    "sqlite3": "^5.1.6"
+    "prettier": "^2.7.1"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "sqlite3": "^5.1.6"
+  }
 }
