@@ -4,7 +4,7 @@ import {
   getAllRecords,
   dropTable,
   closeDatabase,
-} from "../promise_functions.mjs";
+} from "../promise_functions.js";
 
 async function main() {
   await createTable();

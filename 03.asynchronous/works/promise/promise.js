@@ -5,7 +5,7 @@ import {
   getAllRecords,
   dropTable,
   closeDatabase,
-} from "../promise_functions.mjs";
+} from "../promise_functions.js";
 
 createTable()
   .then(() => {
