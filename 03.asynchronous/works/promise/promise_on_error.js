@@ -1,30 +1,28 @@
-import {
-  createTable,
-  insertRecord,
-  getAllRecords,
-  dropTable,
-  closeDatabase,
-} from "../promise_functions.js";
+import { run, all, close } from "../promise_functions.js";
 
-createTable()
+run("CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)")
   .then(() => {
-    return insertRecord("オブジェクト指向設計実践ガイド");
+    return run(
+      "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
+    );
   })
   .then(() => {
-    return insertRecord("オブジェクト指向設計実践ガイド");
+    return run(
+      "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
+    );
   })
   .catch((error) => {
     console.error(error);
   })
   .then(() => {
-    return getAllRecords("foods");
+    return all("SELECT * FROM foods");
   })
   .catch((error) => {
     console.error(error);
   })
   .then(() => {
-    return dropTable();
+    return run("DROP TABLE books");
   })
   .then(() => {
-    closeDatabase();
+    close();
   });

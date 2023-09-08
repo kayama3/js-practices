@@ -1,33 +1,22 @@
-import {
-  createTable,
-  insertRecord,
-  getRecord,
-  getAllRecords,
-  dropTable,
-  closeDatabase,
-} from "../promise_functions.js";
+import { run, all, close } from "../promise_functions.js";
 
-createTable()
+run("CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)")
   .then(() => {
-    return insertRecord("オブジェクト指向設計実践ガイド");
+    return run(
+      "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
+    );
   })
-  .then(() => {
-    return getRecord("オブジェクト指向設計実践ガイド");
-  })
-  .then((record) => {
-    console.log(record.id);
-  })
-  .then(() => {
-    return insertRecord("Webを支える技術");
+  .then((id) => {
+    console.log(id);
   })
   .then(() => {
-    return getRecord("Webを支える技術");
+    return run("INSERT INTO books (title) VALUES('Webを支える技術')");
   })
-  .then((record) => {
-    console.log(record.id);
+  .then((id) => {
+    console.log(id);
   })
   .then(() => {
-    return getAllRecords("books");
+    return all("SELECT * FROM books");
   })
   .then((records) => {
     records.forEach((record) => {
@@ -35,8 +24,8 @@ createTable()
     });
   })
   .then(() => {
-    return dropTable();
+    return run("DROP TABLE books");
   })
   .then(() => {
-    closeDatabase();
+    close();
   });

@@ -1,30 +1,26 @@
-import {
-  createTable,
-  insertRecord,
-  getRecord,
-  getAllRecords,
-  dropTable,
-  closeDatabase,
-} from "../promise_functions.js";
+import { run, all, close } from "../promise_functions.js";
 
 async function main() {
-  await createTable();
+  await run(
+    "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)"
+  );
 
-  await insertRecord("オブジェクト指向設計実践ガイド");
-  let record = await getRecord("オブジェクト指向設計実践ガイド");
-  console.log(record.id);
+  let id = await run(
+    "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
+  );
+  console.log(id);
 
-  await insertRecord("Webを支える技術");
-  record = await getRecord("Webを支える技術");
-  console.log(record.id);
+  id = await run("INSERT INTO books (title) VALUES('Webを支える技術')");
+  console.log(id);
 
-  const records = await getAllRecords("books");
+  const records = await all("SELECT * FROM books");
   records.forEach((record) => {
     console.log(record.id, record.title);
   });
 
-  await dropTable();
-  await closeDatabase();
+  await run("DROP TABLE books");
+
+  await close();
 }
 
 main();
