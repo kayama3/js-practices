@@ -1,10 +1,6 @@
-import sqlite3 from 'sqlite3';
-
-const db = new sqlite3.Database(':memory:');
-
-export function run(sql) {
+export function run(database, sql) {
   return new Promise((resolve, reject) => 
-    db.run(sql, function(error) {
+    database.run(sql, function(error) {
       if (!error) {
         resolve(this.lastID);
       } else {
@@ -14,9 +10,9 @@ export function run(sql) {
   );
 }
 
-export function all(sql) {
+export function all(database, sql) {
   return new Promise((resolve, reject) => 
-    db.all(sql, (error, records) => {
+    database.all(sql, (error, records) => {
       if (!error) {
         resolve(records);
       } else {
@@ -26,9 +22,9 @@ export function all(sql) {
   )
 }
 
-export function close() {
+export function close(database) {
   return new Promise((resolve, reject) => 
-    db.close((error) => {
+    database.close((error) => {
       if (!error) {
         resolve();
       } else {

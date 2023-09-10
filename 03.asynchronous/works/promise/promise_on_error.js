@@ -1,28 +1,31 @@
 import { run, all, close } from "../promise_functions.js";
+import sqlite3 from 'sqlite3';
 
-run("CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)")
+const db = new sqlite3.Database(':memory:');
+
+run(db, "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)")
   .then(() => {
     return run(
-      "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
+      db, "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
     );
   })
   .then(() => {
     return run(
-      "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
+      db, "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
     );
   })
   .catch((error) => {
     console.error(error);
   })
   .then(() => {
-    return all("SELECT * FROM foods");
+    return all(db, "SELECT * FROM foods");
   })
   .catch((error) => {
     console.error(error);
   })
   .then(() => {
-    return run("DROP TABLE books");
+    return run(db, "DROP TABLE books");
   })
   .then(() => {
-    close();
+    close(db);
   });

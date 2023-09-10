@@ -1,26 +1,29 @@
 import { run, all, close } from "../promise_functions.js";
+import sqlite3 from 'sqlite3';
+
+const db = new sqlite3.Database(':memory:');
 
 async function main() {
   await run(
-    "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)"
+    db, "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)"
   );
 
   let id = await run(
-    "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
+    db, "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
   );
   console.log(id);
 
-  id = await run("INSERT INTO books (title) VALUES('Webを支える技術')");
+  id = await run(db, "INSERT INTO books (title) VALUES('Webを支える技術')");
   console.log(id);
 
-  const records = await all("SELECT * FROM books");
+  const records = await all(db, "SELECT * FROM books");
   records.forEach((record) => {
     console.log(record.id, record.title);
   });
 
-  await run("DROP TABLE books");
+  await run(db, "DROP TABLE books");
 
-  await close();
+  await close(db);
 }
 
 main();
