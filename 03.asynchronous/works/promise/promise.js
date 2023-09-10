@@ -11,14 +11,10 @@ run(db, "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)
   })
   .then((id) => {
     console.log(id);
-  })
-  .then(() => {
     return run(db, "INSERT INTO books (title) VALUES('Webを支える技術')");
   })
   .then((id) => {
     console.log(id);
-  })
-  .then(() => {
     return all(db, "SELECT * FROM books");
   })
   .then((records) => {
