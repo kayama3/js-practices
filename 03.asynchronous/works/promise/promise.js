@@ -1,12 +1,16 @@
 import { run, all, close } from "../promise_functions.js";
-import sqlite3 from 'sqlite3';
+import sqlite3 from "sqlite3";
 
-const db = new sqlite3.Database(':memory:');
+const db = new sqlite3.Database(":memory:");
 
-run(db, "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)")
+run(
+  db,
+  "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)"
+)
   .then(() => {
     return run(
-      db, "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
+      db,
+      "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
     );
   })
   .then((id) => {
