@@ -21,7 +21,7 @@ async function main() {
   }
 
   try {
-    const records = await all(db, "SELECT * FROM books");
+    const records = await all(db, "SELECT * FROM foods");
     records.forEach((record) => {
       console.log(record.id, record.title);
     });
