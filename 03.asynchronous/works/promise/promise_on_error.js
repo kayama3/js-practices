@@ -15,13 +15,13 @@ run(db, "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)
     );
   })
   .catch((error) => {
-    console.error(error);
+    console.error(error.message);
   })
   .then(() => {
     return all(db, "SELECT * FROM foods");
   })
   .catch((error) => {
-    console.error(error);
+    console.error(error.message);
   })
   .then(() => {
     return run(db, "DROP TABLE books");

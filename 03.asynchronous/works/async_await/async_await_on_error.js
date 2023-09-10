@@ -17,7 +17,7 @@ async function main() {
       db, "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
     );
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
   }
 
   try {
@@ -26,7 +26,7 @@ async function main() {
       console.log(record.id, record.title);
     });
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
   }
 
   await run(db, "DROP TABLE books");
