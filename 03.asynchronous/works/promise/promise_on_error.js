@@ -20,7 +20,7 @@ run(
     );
   })
   .catch((error) => {
-    if (error.code == "SQLITE_CONSTRAINT") {
+    if (error.code === "SQLITE_CONSTRAINT") {
       console.error(error.message);
     } else {
       throw error;
@@ -30,7 +30,7 @@ run(
     return all(db, "SELECT * FROM foods");
   })
   .catch((error) => {
-    if (error.code == "SQLITE_ERROR") {
+    if (error.code === "SQLITE_ERROR") {
       console.error(error.message);
     } else {
       throw error;

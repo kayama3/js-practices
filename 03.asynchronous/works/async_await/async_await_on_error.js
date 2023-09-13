@@ -20,7 +20,7 @@ async function main() {
       "INSERT INTO books (title) VALUES('オブジェクト指向設計実践ガイド')"
     );
   } catch (error) {
-    if (error.code == "SQLITE_CONSTRAINT") {
+    if (error.code === "SQLITE_CONSTRAINT") {
       console.error(error.message);
     } else {
       throw error;
@@ -33,7 +33,7 @@ async function main() {
       console.log(record.id, record.title);
     });
   } catch (error) {
-    if (error.code == "SQLITE_ERROR") {
+    if (error.code === "SQLITE_ERROR") {
       console.error(error.message);
     } else {
       throw error;

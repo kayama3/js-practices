@@ -6,14 +6,14 @@ db.run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL UNIQUE)",
   () => {
     db.run("INSERT INTO books (title)", (err) => {
-      if (err.code == "SQLITE_ERROR") {
+      if (err.code === "SQLITE_ERROR") {
         console.error(err.message);
       } else {
         throw err;
       }
 
       db.each("SELECT * FROM foods", (err) => {
-        if (err.code == "SQLITE_ERROR") {
+        if (err.code === "SQLITE_ERROR") {
           console.error(err.message);
         } else {
           throw err;
