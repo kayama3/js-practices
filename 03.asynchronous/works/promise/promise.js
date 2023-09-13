@@ -25,8 +25,6 @@ run(
     records.forEach((record) => {
       console.log(record.id, record.title);
     });
-  })
-  .then(() => {
     return run(db, "DROP TABLE books");
   })
   .then(() => {
