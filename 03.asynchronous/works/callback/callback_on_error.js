@@ -10,13 +10,9 @@ db.run(
         console.error(err.message);
       }
 
-      db.each("SELECT * FROM foods", (err, rows) => {
-        if (err.code === "SQLITE_ERROR") {
+      db.each("SELECT * FROM foods", (err) => {
+        if (err && err.code === "SQLITE_ERROR") {
           console.error(err.message);
-        } else {
-          rows.forEach((row) => {
-            console.log(row.id, row.title);
-          });
         }
 
         db.run("DROP TABLE books", () => {
