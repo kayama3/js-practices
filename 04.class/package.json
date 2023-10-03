@@ -1,12 +1,17 @@
 {
   "scripts": {
-    "fix": "prettier --write . && eslint --fix .",
-    "lint": "prettier --check . && eslint ."
+    "fix": "prettier --write memo_app/**/* && eslint --fix memo_app/**/*",
+    "lint": "prettier --check memo_app/**/* && eslint memo_app/**/*"
   },
   "devDependencies": {
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.7.1"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "enquirer": "^2.4.1",
+    "minimist": "^1.2.8",
+    "sqlite3": "^5.1.6"
+  }
 }
