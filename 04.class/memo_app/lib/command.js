@@ -55,6 +55,7 @@ export class Command {
 
   async #deleteNote() {
     const records = await this.#db.all("SELECT * FROM notes");
+    if (!records.length) {return console.log('This app does not contain any note.\nPlease create a note.');}
     const choices = this.#buildChoices(records);
     const prompt = this.#buildDeletePrompt(
       choices,
@@ -71,6 +72,7 @@ export class Command {
 
   async #referenceNote() {
     const records = await this.#db.all("SELECT * FROM notes");
+    if (!records.length) {return console.log('This app does not contain any note.\nPlease create a note.');}
     const choices = this.#buildChoices(records);
     const prompt = this.#buildReferencePrompt(
       choices,
