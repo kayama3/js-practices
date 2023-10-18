@@ -33,7 +33,7 @@ export class Command {
   }
 
   async #listHeadOfLine() {
-    const records = await this.#db.all("SELECT * FROM notes");
+    const records = await this.#db.all("SELECT * FROM notes ORDER BY id");
 
     records.forEach((row) => {
       const note = new Note(row.id, row.body);
@@ -42,7 +42,7 @@ export class Command {
   }
 
   async #referenceNote() {
-    const records = await this.#db.all("SELECT * FROM notes");
+    const records = await this.#db.all("SELECT * FROM notes ORDER BY id");
     if (!records.length) {return console.log('This app does not contain any note.\nPlease create a note.');}
     const choices = this.#buildChoices(records);
     const prompt = this.#buildReferencePrompt(
@@ -85,7 +85,7 @@ export class Command {
   }
 
   async #deleteNote() {
-    const records = await this.#db.all("SELECT * FROM notes");
+    const records = await this.#db.all("SELECT * FROM notes ORDER BY id");
     if (!records.length) {return console.log('This app does not contain any note.\nPlease create a note.');}
     const choices = this.#buildChoices(records);
     const prompt = this.#buildDeletePrompt(
