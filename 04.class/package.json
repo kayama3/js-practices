@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "fix": "prettier --write memo_app/**/* && eslint --fix memo_app/**/*",
-    "lint": "prettier --check memo_app/**/* && eslint memo_app/**/*"
+    "fix": "prettier --write . && eslint --fix .",
+    "lint": "prettier --check . && eslint ."
   },
   "devDependencies": {
     "eslint": "^8.24.0",
