@@ -9,11 +9,11 @@ export class Option {
     return this.#argv.l;
   }
 
-  get isDelete() {
-    return this.#argv.d;
-  }
-
   get isReference() {
     return this.#argv.r;
+  }
+
+  get isDelete() {
+    return this.#argv.d;
   }
 }

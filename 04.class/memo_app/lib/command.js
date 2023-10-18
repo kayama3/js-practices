@@ -32,24 +32,55 @@ export class Command {
     await this.#db.close();
   }
 
-  async #inputNote() {
-    const lines = [];
-    const rl = readline.createInterface({
-      input: process.stdin,
-    });
-
-    const body = await this.#buildBody(lines, rl);
-    await this.#db.run(
-      `INSERT INTO notes (body) VALUES ('${body.join("\n")}')`
-    );
-  }
-
   async #listHeadOfLine() {
     const records = await this.#db.all("SELECT * FROM notes");
 
     records.forEach((row) => {
       const note = new Note(row.id, row.body);
       console.log(note.headOfLine);
+    });
+  }
+
+  async #referenceNote() {
+    const records = await this.#db.all("SELECT * FROM notes");
+    if (!records.length) {return console.log('This app does not contain any note.\nPlease create a note.');}
+    const choices = this.#buildChoices(records);
+    const prompt = this.#buildReferencePrompt(
+      choices,
+      "Choose a note you want to see:"
+    );
+
+    try {
+      await prompt.run();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  #buildChoices(records) {
+    const choices = [];
+
+    records.forEach((row) => {
+      const note = new Note(row.id, row.body);
+
+      choices.push({
+        message: note.headOfLine,
+        name: note.id,
+        value: note.body,
+      });
+    });
+
+    return choices;
+  }
+
+  #buildReferencePrompt(notes, text) {
+    return new Select({
+      name: "note",
+      message: text,
+      choices: notes,
+      footer() {
+        return "\n" + notes[this.index]["value"];
+      },
     });
   }
 
@@ -70,20 +101,24 @@ export class Command {
     }
   }
 
-  async #referenceNote() {
-    const records = await this.#db.all("SELECT * FROM notes");
-    if (!records.length) {return console.log('This app does not contain any note.\nPlease create a note.');}
-    const choices = this.#buildChoices(records);
-    const prompt = this.#buildReferencePrompt(
-      choices,
-      "Choose a note you want to see:"
-    );
+  #buildDeletePrompt(notes, text) {
+    return new Select({
+      name: "note",
+      message: text,
+      choices: notes,
+    });
+  }
 
-    try {
-      await prompt.run();
-    } catch (error) {
-      console.log(error);
-    }
+  async #inputNote() {
+    const lines = [];
+    const rl = readline.createInterface({
+      input: process.stdin,
+    });
+
+    const body = await this.#buildBody(lines, rl);
+    await this.#db.run(
+      `INSERT INTO notes (body) VALUES ('${body.join("\n")}')`
+    );
   }
 
   #buildBody(lines, rl) {
@@ -95,41 +130,6 @@ export class Command {
       rl.on("close", () => {
         resolve(lines);
       });
-    });
-  }
-
-  #buildChoices(records) {
-    const choices = [];
-
-    records.forEach((row) => {
-      const note = new Note(row.id, row.body);
-
-      choices.push({
-        message: note.headOfLine,
-        name: note.id,
-        value: note.body,
-      });
-    });
-
-    return choices;
-  }
-
-  #buildDeletePrompt(notes, text) {
-    return new Select({
-      name: "note",
-      message: text,
-      choices: notes,
-    });
-  }
-
-  #buildReferencePrompt(notes, text) {
-    return new Select({
-      name: "note",
-      message: text,
-      choices: notes,
-      footer() {
-        return "\n" + notes[this.index]["value"];
-      },
     });
   }
 }
