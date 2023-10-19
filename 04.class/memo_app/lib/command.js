@@ -49,7 +49,9 @@ export class Command {
     );
 
     try {
-      await prompt.run();
+      const memoId = await prompt.run();
+      const memo = await this.#db.getMemo(memoId);
+      console.log(memo.body)
     } catch (error) {
       console.log(error);
     }

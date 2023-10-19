@@ -21,6 +21,18 @@ export class sqliteInterface {
     );
   }
 
+  getMemo(memoId) {
+    return new Promise((resolve, reject) =>
+      this.#db.get('SELECT * FROM notes WHERE id = ? ORDER BY id', memoId, (error, memo) => {
+        if (!error) {
+          resolve(memo);
+        } else {
+          reject(error);
+        }
+      })
+    );
+  }
+
   deleteRecord(noteId) {
     return this.#run('DELETE FROM notes WHERE id = ?', noteId);
   }
