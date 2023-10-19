@@ -114,7 +114,7 @@ export class Command {
     });
 
     const body = await this.#buildBody(lines, rl);
-    await this.#db.insertRecord(body.join('\n'))
+    await this.#db.insertRecord(body)
   }
 
   #buildBody(lines, rl) {
@@ -124,7 +124,7 @@ export class Command {
       });
 
       rl.on("close", () => {
-        resolve(lines);
+        resolve(lines.join('\n'));
       });
     });
   }
