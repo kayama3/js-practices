@@ -40,6 +40,12 @@ export class Command {
   }
 
   async #referenceNote() {
+    const memoId = await this.#runReferencePrompt();
+    const memo = await this.#db.getMemo(memoId);
+    console.log(memo.body)
+  }
+
+  async #runReferencePrompt() {
     const records = await this.#db.collectAll();
     if (!records.length) {return console.log('This app does not contain any note.\nPlease create a note.');}
     const choices = this.#buildChoices(records);
@@ -48,13 +54,7 @@ export class Command {
       "Choose a note you want to see:"
     );
 
-    try {
-      const memoId = await prompt.run();
-      const memo = await this.#db.getMemo(memoId);
-      console.log(memo.body)
-    } catch (error) {
-      console.log(error);
-    }
+    return await prompt.run();
   }
 
   #buildChoices(records) {
@@ -85,6 +85,11 @@ export class Command {
   }
 
   async #deleteNote() {
+    const noteId = await this.#runDeletePrompt();
+    await this.#db.deleteRecord(noteId);
+  }
+
+  async #runDeletePrompt() {
     const records = await this.#db.collectAll();
     if (!records.length) {return console.log('This app does not contain any note.\nPlease create a note.');}
     const choices = this.#buildChoices(records);
@@ -93,12 +98,7 @@ export class Command {
       "Choose a note you want to delete:"
     );
 
-    try {
-      const noteId = await prompt.run();
-      await this.#db.deleteRecord(noteId);
-    } catch (error) {
-      console.log(error);
-    }
+    return await prompt.run();
   }
 
   #buildDeletePrompt(notes, text) {
