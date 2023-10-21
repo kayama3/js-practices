@@ -6,12 +6,12 @@ export class sqliteInterface {
   }
 
   createTable() {
-    return this.#run('CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, body TEXT NOT NULL)');
+    return this.#run('CREATE TABLE IF NOT EXISTS memos (id INTEGER PRIMARY KEY, body TEXT NOT NULL)');
   }
 
   collectAll() {
     return new Promise((resolve, reject) =>
-      this.#db.all('SELECT * FROM notes ORDER BY id', (error, records) => {
+      this.#db.all('SELECT * FROM memos ORDER BY id', (error, records) => {
         if (!error) {
           resolve(records);
         } else {
@@ -23,7 +23,7 @@ export class sqliteInterface {
 
   getMemo(memoId) {
     return new Promise((resolve, reject) =>
-      this.#db.get('SELECT * FROM notes WHERE id = ? ORDER BY id', memoId, (error, memo) => {
+      this.#db.get('SELECT * FROM memos WHERE id = ? ORDER BY id', memoId, (error, memo) => {
         if (!error) {
           resolve(memo);
         } else {
@@ -33,12 +33,12 @@ export class sqliteInterface {
     );
   }
 
-  deleteRecord(noteId) {
-    return this.#run('DELETE FROM notes WHERE id = ?', noteId);
+  deleteRecord(memoId) {
+    return this.#run('DELETE FROM memos WHERE id = ?', memoId);
   }
 
   insertRecord(body) {
-    return this.#run('INSERT INTO notes (body) VALUES (?)', body);
+    return this.#run('INSERT INTO memos (body) VALUES (?)', body);
   }
 
   closeTable() {
