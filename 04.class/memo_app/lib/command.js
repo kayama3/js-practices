@@ -6,32 +6,32 @@ import Enquirer from "enquirer";
 const { Select } = Enquirer;
 
 export class Command {
-  #opt;
-  #db;
+  #option;
+  #database;
 
-  constructor(argv, db) {
-    this.#opt = new Option(argv);
-    this.#db = new sqliteInterface(db);
+  constructor(option, database) {
+    this.#option = new Option(option);
+    this.#database = new sqliteInterface(database);
   }
 
   async exec() {
-    await this.#db.createTable();
+    await this.#database.createTable();
 
-    if (this.#opt.isList) {
+    if (this.#option.isList) {
       await this.#listHeadOfLine();
-    } else if (this.#opt.isReference) {
+    } else if (this.#option.isReference) {
       await this.#referenceMemo();
-    } else if (this.#opt.isDelete) {
+    } else if (this.#option.isDelete) {
       await this.#deleteMemo();
     } else {
       await this.#inputMemo();
     }
 
-    await this.#db.closeTable();
+    await this.#database.closeTable();
   }
 
   async #listHeadOfLine() {
-    const records = await this.#db.collectAll();
+    const records = await this.#database.collectAll();
 
     records.forEach((row) => {
       const memo = new Memo(row.id, row.body);
@@ -41,12 +41,12 @@ export class Command {
 
   async #referenceMemo() {
     const memoId = await this.#runReferencePrompt();
-    const memo = await this.#db.getMemo(memoId);
+    const memo = await this.#database.getMemo(memoId);
     console.log(memo.body)
   }
 
   async #runReferencePrompt() {
-    const records = await this.#db.collectAll();
+    const records = await this.#database.collectAll();
     if (!records.length) {return console.log('This app does not contain any memo.\nPlease create a memo.');}
     const choices = this.#buildChoices(records);
     const prompt = this.#buildReferencePrompt(
@@ -86,11 +86,11 @@ export class Command {
 
   async #deleteMemo() {
     const memoId = await this.#runDeletePrompt();
-    await this.#db.deleteRecord(memoId);
+    await this.#database.deleteRecord(memoId);
   }
 
   async #runDeletePrompt() {
-    const records = await this.#db.collectAll();
+    const records = await this.#database.collectAll();
     if (!records.length) {return console.log('This app does not contain any memo.\nPlease create a memo.');}
     const choices = this.#buildChoices(records);
     const prompt = this.#buildDeletePrompt(
@@ -116,7 +116,7 @@ export class Command {
     });
 
     const body = await this.#buildBody(lines, rl);
-    await this.#db.insertRecord(body)
+    await this.#database.insertRecord(body)
   }
 
   #buildBody(lines, rl) {

@@ -1,19 +1,19 @@
 export class Option {
-  #argv;
+  #option;
 
-  constructor(argv) {
-    this.#argv = argv;
+  constructor(option) {
+    this.#option = option;
   }
 
   get isList() {
-    return this.#argv.l;
+    return this.#option.l;
   }
 
   get isReference() {
-    return this.#argv.r;
+    return this.#option.r;
   }
 
   get isDelete() {
-    return this.#argv.d;
+    return this.#option.d;
   }
 }

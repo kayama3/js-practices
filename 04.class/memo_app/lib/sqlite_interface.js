@@ -1,8 +1,8 @@
 export class sqliteInterface {
-  #db;
+  #database;
 
-  constructor(db) {
-    this.#db = db;
+  constructor(database) {
+    this.#database = database;
   }
 
   createTable() {
@@ -11,7 +11,7 @@ export class sqliteInterface {
 
   collectAll() {
     return new Promise((resolve, reject) =>
-      this.#db.all('SELECT * FROM memos ORDER BY id', (error, records) => {
+      this.#database.all('SELECT * FROM memos ORDER BY id', (error, records) => {
         if (!error) {
           resolve(records);
         } else {
@@ -23,7 +23,7 @@ export class sqliteInterface {
 
   getMemo(memoId) {
     return new Promise((resolve, reject) =>
-      this.#db.get('SELECT * FROM memos WHERE id = ? ORDER BY id', memoId, (error, memo) => {
+      this.#database.get('SELECT * FROM memos WHERE id = ? ORDER BY id', memoId, (error, memo) => {
         if (!error) {
           resolve(memo);
         } else {
@@ -43,7 +43,7 @@ export class sqliteInterface {
 
   closeTable() {
     return new Promise((resolve, reject) =>
-    this.#db.close((error) => {
+    this.#database.close((error) => {
       if (!error) {
         resolve();
       } else {
@@ -55,7 +55,7 @@ export class sqliteInterface {
 
   #run(sql, params) {
     return new Promise((resolve, reject) =>
-      this.#db.run(sql, params, error => {
+      this.#database.run(sql, params, error => {
         if (!error) {
           resolve();
         } else {
