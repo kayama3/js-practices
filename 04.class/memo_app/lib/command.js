@@ -1,6 +1,6 @@
 import { Option } from "./option.js";
 import { Memo } from "./memo.js";
-import { sqliteInterface } from "./sqlite_interface.js";
+import { SqliteRepository } from "./sqlite_repostory.js";
 import readline from "node:readline/promises";
 import Enquirer from "enquirer";
 const { Select } = Enquirer;
@@ -11,7 +11,7 @@ export class Command {
 
   constructor(option, database) {
     this.#option = new Option(option);
-    this.#database = new sqliteInterface(database);
+    this.#database = new SqliteRepository(database);
   }
 
   async exec() {

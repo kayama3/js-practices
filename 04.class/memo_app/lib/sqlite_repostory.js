@@ -1,4 +1,4 @@
-export class sqliteInterface {
+export class SqliteRepository {
   #database;
 
   constructor(database) {
@@ -11,9 +11,9 @@ export class sqliteInterface {
 
   collectAll() {
     return new Promise((resolve, reject) =>
-      this.#database.all('SELECT * FROM memos ORDER BY id', (error, records) => {
+      this.#database.all('SELECT * FROM memos ORDER BY id', (error, memos) => {
         if (!error) {
-          resolve(records);
+          resolve(memos);
         } else {
           reject(error);
         }
