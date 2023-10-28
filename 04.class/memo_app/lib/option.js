@@ -5,6 +5,10 @@ export class Option {
     this.#option = option;
   }
 
+  get isAnyOptionTrue() {
+    return Object.values(this.#option).some((x) => x === true);
+  }
+
   get isList() {
     return this.#option.l;
   }

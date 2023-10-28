@@ -17,12 +17,24 @@ export class Command {
   async exec() {
     await this.#database.createTable();
 
-    if (this.#option.isList) {
-      await this.#listHeadOfLine();
-    } else if (this.#option.isReference) {
-      await this.#referenceMemo();
-    } else if (this.#option.isDelete) {
-      await this.#deleteMemo();
+    if (this.#option.isAnyOptionTrue) {
+      const records = await this.#database.collectAll();
+
+      if (records.length === 0) {
+        console.log(
+          `This app does not contain any memo.
+          Please create a memo.`
+        );
+      } else {
+        if (this.#option.isList) {
+          await this.#listHeadOfLine(records);
+        } else if (this.#option.isReference) {
+          await this.#referenceMemo(records);
+        } else if (this.#option.isDelete) {
+          await this.#deleteMemo(records);
+        }
+      }
+
     } else {
       await this.#inputMemo();
     }
@@ -30,26 +42,22 @@ export class Command {
     await this.#database.closeTable();
   }
 
-  async #listHeadOfLine() {
-    const records = await this.#database.collectAll();
-
+  async #listHeadOfLine(records) {
     records.forEach((row) => {
       const memo = new Memo(row.id, row.body);
       console.log(memo.headOfLine);
     });
   }
 
-  async #referenceMemo() {
-    const memoId = await this.#runReferencePrompt();
+  async #referenceMemo(records) {
+    const memoId = await this.#runReferencePrompt(records);
     const memo = await this.#database.getMemo(memoId);
-    console.log(memo.body)
+    console.log(memo.body);
   }
 
-  async #runReferencePrompt() {
-    const records = await this.#database.collectAll();
-    if (!records.length) {return console.log('This app does not contain any memo.\nPlease create a memo.');}
+  async #runReferencePrompt(records) {
     const choices = this.#buildChoices(records);
-    const prompt = this.#buildReferencePrompt(
+    const prompt = await this.#buildReferencePrompt(
       choices,
       "Choose a memo you want to see:"
     );
@@ -84,14 +92,12 @@ export class Command {
     });
   }
 
-  async #deleteMemo() {
-    const memoId = await this.#runDeletePrompt();
+  async #deleteMemo(records) {
+    const memoId = await this.#runDeletePrompt(records);
     await this.#database.deleteRecord(memoId);
   }
 
-  async #runDeletePrompt() {
-    const records = await this.#database.collectAll();
-    if (!records.length) {return console.log('This app does not contain any memo.\nPlease create a memo.');}
+  async #runDeletePrompt(records) {
     const choices = this.#buildChoices(records);
     const prompt = this.#buildDeletePrompt(
       choices,
@@ -116,7 +122,7 @@ export class Command {
     });
 
     const body = await this.#buildBody(lines, rl);
-    await this.#database.insertRecord(body)
+    await this.#database.insertRecord(body);
   }
 
   #buildBody(lines, rl) {
@@ -126,7 +132,7 @@ export class Command {
       });
 
       rl.on("close", () => {
-        resolve(lines.join('\n'));
+        resolve(lines.join("\n"));
       });
     });
   }
