@@ -17,29 +17,52 @@ export class Command {
   async exec() {
     await this.#database.createTable();
 
-    if (this.#option.isAnyOptionTrue) {
-      const records = await this.#database.collectAll();
-
-      if (records.length === 0) {
-        console.log(
-          `This app does not contain any memo.
-          Please create a memo.`
-        );
-      } else {
-        if (this.#option.isList) {
-          await this.#listHeadOfLine(records);
-        } else if (this.#option.isReference) {
-          await this.#referenceMemo(records);
-        } else if (this.#option.isDelete) {
-          await this.#deleteMemo(records);
-        }
-      }
-
-    } else {
+    if (!this.#option.isAnyOptionTrue) {
       await this.#inputMemo();
+      await this.#database.closeTable();
+      return;
+    }
+
+    const records = await this.#database.collectAll();
+
+    if (records.length === 0) {
+      console.log('This app does not contain any memo.');
+      console.log('Please create a memo.');
+      await this.#database.closeTable();
+      return;
+    }
+
+    if (this.#option.isList) {
+      await this.#listHeadOfLine(records);
+    } else if (this.#option.isReference) {
+      await this.#referenceMemo(records);
+    } else if (this.#option.isDelete) {
+      await this.#deleteMemo(records);
     }
 
     await this.#database.closeTable();
+  }
+
+  async #inputMemo() {
+    const lines = [];
+    const rl = readline.createInterface({
+      input: process.stdin,
+    });
+
+    const body = await this.#buildBody(lines, rl);
+    await this.#database.insertRecord(body);
+  }
+
+  #buildBody(lines, rl) {
+    return new Promise((resolve) => {
+      rl.on("line", (line) => {
+        lines.push(line);
+      });
+
+      rl.on("close", () => {
+        resolve(lines.join("\n"));
+      });
+    });
   }
 
   async #listHeadOfLine(records) {
@@ -112,28 +135,6 @@ export class Command {
       name: "memo",
       message: text,
       choices: memos,
-    });
-  }
-
-  async #inputMemo() {
-    const lines = [];
-    const rl = readline.createInterface({
-      input: process.stdin,
-    });
-
-    const body = await this.#buildBody(lines, rl);
-    await this.#database.insertRecord(body);
-  }
-
-  #buildBody(lines, rl) {
-    return new Promise((resolve) => {
-      rl.on("line", (line) => {
-        lines.push(line);
-      });
-
-      rl.on("close", () => {
-        resolve(lines.join("\n"));
-      });
     });
   }
 }
