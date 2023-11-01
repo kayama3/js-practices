@@ -5,7 +5,7 @@ import { Memo } from "./memo.js";
 import { SqliteRepository } from "./sqlite_repostory.js";
 const { Select } = Enquirer;
 
-export class Command {
+export class Main {
   #option;
   #database;
 
