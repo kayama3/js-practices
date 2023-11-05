@@ -26,8 +26,8 @@ export class Main {
     const records = await this.#database.collectAll();
 
     if (records.length === 0) {
-      console.log('This app does not contain any memo.');
-      console.log('Please create a memo.');
+      console.log("This app does not contain any memo.");
+      console.log("Please create a memo.");
       await this.#database.closeTable();
       return;
     }
