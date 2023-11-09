@@ -11,6 +11,18 @@ export class SqliteRepository {
     );
   }
 
+  closeTable() {
+    return new Promise((resolve, reject) =>
+      this.#database.close((error) => {
+        if (!error) {
+          resolve();
+        } else {
+          reject(error);
+        }
+      })
+    );
+  }
+
   collectAll() {
     return new Promise((resolve, reject) =>
       this.#database.all("SELECT * FROM memos ORDER BY id", (error, memos) => {
@@ -21,6 +33,10 @@ export class SqliteRepository {
         }
       })
     );
+  }
+
+  insertRecord(body) {
+    return this.#run("INSERT INTO memos (body) VALUES (?)", body);
   }
 
   getMemo(memoId) {
@@ -43,25 +59,9 @@ export class SqliteRepository {
     return this.#run("DELETE FROM memos WHERE id = ?", memoId);
   }
 
-  insertRecord(body) {
-    return this.#run("INSERT INTO memos (body) VALUES (?)", body);
-  }
-
-  closeTable() {
+  #run(sql, param) {
     return new Promise((resolve, reject) =>
-      this.#database.close((error) => {
-        if (!error) {
-          resolve();
-        } else {
-          reject(error);
-        }
-      })
-    );
-  }
-
-  #run(sql, params) {
-    return new Promise((resolve, reject) =>
-      this.#database.run(sql, params, (error) => {
+      this.#database.run(sql, param, (error) => {
         if (!error) {
           resolve();
         } else {
