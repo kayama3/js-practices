@@ -2,7 +2,7 @@ import readline from "node:readline/promises";
 import Enquirer from "enquirer";
 import { Option } from "./option.js";
 import { Memo } from "./memo.js";
-import { SqliteRepository } from "./sqlite_repostory.js";
+import { SqliteRepository } from "./sqlite_repository.js";
 const { Select } = Enquirer;
 
 export class Main {
