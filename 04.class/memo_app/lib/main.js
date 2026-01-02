@@ -2,33 +2,35 @@ import readline from "node:readline/promises";
 import Enquirer from "enquirer";
 import { Option } from "./option.js";
 import { Memo } from "./memo.js";
-import { SqliteRepository } from "./sqlite_repository.js";
+import SqliteClient from "./sqlite_client.js";
+import MemoRepository from "./memo_repository.js";
 const { Select } = Enquirer;
 
 export class Main {
   #option;
   #database;
 
-  constructor(option, database) {
+  constructor(option) {
     this.#option = new Option(option);
-    this.#database = new SqliteRepository(database);
+    this.#database = new SqliteClient();
+    this.memoRepository = new MemoRepository(this.#database);
   }
 
   async exec() {
-    await this.#database.createTable();
+    await this.memoRepository.createTable();
 
     if (!this.#option.isAnyOptionTrue) {
       await this.#inputMemo();
-      await this.#database.closeTable();
+      await this.#database.close();
       return;
     }
 
-    const records = await this.#database.collectAll();
+    const records = await this.memoRepository.all();
 
     if (records.length === 0) {
       console.log("This app does not contain any memo.");
       console.log("Please create a memo.");
-      await this.#database.closeTable();
+      await this.#database.close();
       return;
     }
 
@@ -40,7 +42,7 @@ export class Main {
       await this.#deleteMemo(records);
     }
 
-    await this.#database.closeTable();
+    await this.#database.close();
   }
 
   async #inputMemo() {
@@ -50,7 +52,7 @@ export class Main {
     });
 
     const body = await this.#buildBody(lines, rl);
-    await this.#database.insertRecord(body);
+    await this.memoRepository.add(body);
   }
 
   #buildBody(lines, rl) {
@@ -74,7 +76,7 @@ export class Main {
 
   async #referenceMemo(records) {
     const memoId = await this.#runReferencePrompt(records);
-    const memo = await this.#database.getMemo(memoId);
+    const memo = await this.memoRepository.get(memoId);
     console.log(memo.body);
   }
 
@@ -117,7 +119,7 @@ export class Main {
 
   async #deleteMemo(records) {
     const memoId = await this.#runDeletePrompt(records);
-    await this.#database.deleteRecord(memoId);
+    await this.memoRepository.delete(memoId);
   }
 
   async #runDeletePrompt(records) {
