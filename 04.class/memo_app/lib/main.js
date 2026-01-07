@@ -1,30 +1,22 @@
 import readline from "node:readline/promises";
 import Enquirer from "enquirer";
-import { Option } from "./option.js";
 import { Memo } from "./memo.js";
 import SqliteClient from "./sqlite_client.js";
 import MemoRepository from "./memo_repository.js";
 const { Select } = Enquirer;
+import minimist from "minimist";
 
 export class Main {
-  #option;
   #database;
 
-  constructor(option) {
-    this.#option = new Option(option);
+  constructor() {
     this.#database = new SqliteClient();
     this.memoRepository = new MemoRepository(this.#database);
   }
 
   async exec() {
+    const opts = this.#parseOptions();
     await this.memoRepository.createTable();
-
-    if (!this.#option.isAnyOptionTrue) {
-      await this.#inputMemo();
-      await this.#database.close();
-      return;
-    }
-
     const records = await this.memoRepository.all();
 
     if (records.length === 0) {
@@ -34,15 +26,27 @@ export class Main {
       return;
     }
 
-    if (this.#option.isList) {
+    if (opts.l) {
       await this.#listHeadOfLine(records);
-    } else if (this.#option.isReference) {
+    } else if (opts.r) {
       await this.#referenceMemo(records);
-    } else if (this.#option.isDelete) {
+    } else if (opts.d) {
       await this.#deleteMemo(records);
+    } else {
+      await this.#inputMemo();
     }
 
     await this.#database.close();
+  }
+
+  #parseOptions() {
+    return minimist(process.argv.slice(2), {
+      default: {
+        'l': false,
+        'r': false,
+        'd': false
+      }
+    })
   }
 
   async #inputMemo() {
