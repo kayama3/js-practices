@@ -22,8 +22,6 @@ export class Main {
     if (records.length === 0) {
       console.log("This app does not contain any memo.");
       console.log("Please create a memo.");
-      await this.#database.close();
-      return;
     }
 
     if (opts.l) {
