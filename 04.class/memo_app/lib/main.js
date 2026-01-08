@@ -18,18 +18,21 @@ export class Main {
     const opts = this.#parseOptions();
     await this.memoRepository.createTable();
     const records = await this.memoRepository.all();
+    const memos = records.map((row) => {
+      return new Memo(row.id, row.body);
+    });
 
-    if (records.length === 0) {
+    if (memos.length === 0) {
       console.log("This app does not contain any memo.");
       console.log("Please create a memo.");
     }
 
     if (opts.l) {
-      await this.#listHeadOfLine(records);
+      await this.#listHeadOfLine(memos);
     } else if (opts.r) {
-      await this.#referenceMemo(records);
+      await this.#referenceMemo(memos);
     } else if (opts.d) {
-      await this.#deleteMemo(records);
+      await this.#deleteMemo(memos);
     } else {
       await this.#inputMemo();
     }
@@ -69,21 +72,20 @@ export class Main {
     });
   }
 
-  async #listHeadOfLine(records) {
-    records.forEach((row) => {
-      const memo = new Memo(row.id, row.body);
+  async #listHeadOfLine(memos) {
+    memos.forEach((memo) => {
       console.log(memo.headOfLine);
     });
   }
 
-  async #referenceMemo(records) {
-    const memoId = await this.#runReferencePrompt(records);
+  async #referenceMemo(memos) {
+    const memoId = await this.#runReferencePrompt(memos);
     const memo = await this.memoRepository.get(memoId);
     console.log(memo.body);
   }
 
-  async #runReferencePrompt(records) {
-    const choices = this.#buildChoices(records);
+  async #runReferencePrompt(memos) {
+    const choices = this.#buildChoices(memos);
     const prompt = await this.#buildReferencePrompt(
       choices,
       "Choose a memo you want to see:"
@@ -92,12 +94,10 @@ export class Main {
     return await prompt.run();
   }
 
-  #buildChoices(records) {
+  #buildChoices(memos) {
     const choices = [];
 
-    records.forEach((row) => {
-      const memo = new Memo(row.id, row.body);
-
+    memos.forEach((memo) => {
       choices.push({
         message: memo.headOfLine,
         name: memo.id,
@@ -119,13 +119,13 @@ export class Main {
     });
   }
 
-  async #deleteMemo(records) {
-    const memoId = await this.#runDeletePrompt(records);
+  async #deleteMemo(memos) {
+    const memoId = await this.#runDeletePrompt(memos);
     await this.memoRepository.delete(memoId);
   }
 
-  async #runDeletePrompt(records) {
-    const choices = this.#buildChoices(records);
+  async #runDeletePrompt(memos) {
+    const choices = this.#buildChoices(memos);
     const prompt = this.#buildDeletePrompt(
       choices,
       "Choose a memo you want to delete:"
