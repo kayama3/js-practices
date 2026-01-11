@@ -1,3 +1,3 @@
-import { Main } from "../lib/main.js";
+import Main from "../lib/main.js";
 
 new Main().exec();

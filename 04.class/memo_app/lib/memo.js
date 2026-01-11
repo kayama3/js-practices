@@ -1,4 +1,4 @@
-export class Memo {
+export default class Memo {
   #id;
   #body;
 

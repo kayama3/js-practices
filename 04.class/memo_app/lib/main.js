@@ -1,12 +1,12 @@
 import readline from "node:readline/promises";
 import Enquirer from "enquirer";
-import { Memo } from "./memo.js";
+import Memo from "./memo.js";
 import SqliteClient from "./sqlite_client.js";
 import MemoRepository from "./memo_repository.js";
 const { Select } = Enquirer;
 import minimist from "minimist";
 
-export class Main {
+export default class Main {
   #database;
 
   constructor() {
