@@ -51,16 +51,16 @@ export default class Main {
   }
 
   async #inputMemo() {
+    const body = await this.#buildBody();
+    await this.memoRepository.add(body);
+  }
+
+  #buildBody() {
     const lines = [];
     const rl = readline.createInterface({
       input: process.stdin,
     });
 
-    const body = await this.#buildBody(lines, rl);
-    await this.memoRepository.add(body);
-  }
-
-  #buildBody(lines, rl) {
     return new Promise((resolve) => {
       rl.on("line", (line) => {
         lines.push(line);
