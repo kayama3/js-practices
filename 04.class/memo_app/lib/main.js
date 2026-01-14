@@ -1,23 +1,22 @@
 import readline from "node:readline/promises";
 import Enquirer from "enquirer";
 import Memo from "./memo.js";
-import SqliteClient from "./sqlite_client.js";
-import MemoRepository from "./memo_repository.js";
 const { Select } = Enquirer;
 import minimist from "minimist";
 
 export default class Main {
   #database;
+  #memoRepository;
 
-  constructor() {
-    this.#database = new SqliteClient();
-    this.memoRepository = new MemoRepository(this.#database);
+  constructor(database, memoRepository) {
+    this.#database = database;
+    this.#memoRepository = memoRepository;
   }
 
   async exec() {
     const opts = this.#parseOptions();
-    await this.memoRepository.createTable();
-    const records = await this.memoRepository.all();
+    await this.#memoRepository.createTable();
+    const records = await this.#memoRepository.all();
     const memos = records.map((row) => {
       return new Memo(row.id, row.body);
     });
@@ -52,7 +51,7 @@ export default class Main {
 
   async #inputMemo() {
     const body = await this.#buildBody();
-    await this.memoRepository.add(body);
+    await this.#memoRepository.add(body);
   }
 
   #buildBody() {
@@ -80,7 +79,7 @@ export default class Main {
 
   async #referenceMemo(memos) {
     const memoId = await this.#runReferencePrompt(memos);
-    const memo = await this.memoRepository.get(memoId);
+    const memo = await this.#memoRepository.get(memoId);
     console.log(memo.body);
   }
 
@@ -121,7 +120,7 @@ export default class Main {
 
   async #deleteMemo(memos) {
     const memoId = await this.#runDeletePrompt(memos);
-    await this.memoRepository.delete(memoId);
+    await this.#memoRepository.delete(memoId);
   }
 
   async #runDeletePrompt(memos) {
