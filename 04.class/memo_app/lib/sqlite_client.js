@@ -3,7 +3,7 @@ import sqlite3 from "sqlite3";
 export default class SqliteClient {
   #database;
 
-  constructor(path="./memo.db") {
+  constructor(path = "./memo.db") {
     this.#database = new sqlite3.Database(path);
   }
 
@@ -11,8 +11,8 @@ export default class SqliteClient {
     return this.#promisify("run", sql, param);
   }
 
-  get(sql, memoId) {
-    return this.#promisify("get", sql, memoId);
+  get(sql, param) {
+    return this.#promisify("get", sql, param);
   }
 
   all(sql) {
@@ -24,7 +24,7 @@ export default class SqliteClient {
   }
 
   #promisify(api, ...args) {
-    return new Promise((resolve, reject) => 
+    return new Promise((resolve, reject) =>
       this.#database[api](...args, (error, value) => {
         if (!error) {
           resolve(value);
@@ -32,6 +32,6 @@ export default class SqliteClient {
           reject(error);
         }
       })
-    )
+    );
   }
 }

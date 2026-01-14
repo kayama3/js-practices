@@ -15,7 +15,7 @@ export default class Memo {
     return this.#body;
   }
 
-  get headOfLine() {
+  get firstLine() {
     return this.#body.split("\n")[0];
   }
 }

@@ -1,7 +1,9 @@
 import readline from "node:readline/promises";
 import Enquirer from "enquirer";
 import minimist from "minimist";
+
 import Memo from "./memo.js";
+
 const { Select } = Enquirer;
 
 export default class Main {
@@ -28,13 +30,13 @@ export default class Main {
     const opts = this.#parseOptions();
 
     if (opts.l) {
-      await this.#listHeadOfLine(memos);
+      await this.#listFirstLine(memos);
     } else if (opts.r) {
       await this.#referenceMemo(memos);
     } else if (opts.d) {
       await this.#deleteMemo(memos);
     } else {
-      await this.#inputMemo();
+      await this.#addMemo();
     }
 
     await this.#database.close();
@@ -43,16 +45,16 @@ export default class Main {
   #parseOptions() {
     return minimist(process.argv.slice(2), {
       default: {
-        'l': false,
-        'r': false,
-        'd': false
-      }
-    })
+        l: false,
+        r: false,
+        d: false,
+      },
+    });
   }
 
-  async #listHeadOfLine(memos) {
+  async #listFirstLine(memos) {
     memos.forEach((memo) => {
-      console.log(memo.headOfLine);
+      console.log(memo.firstLine);
     });
   }
 
@@ -69,35 +71,32 @@ export default class Main {
     await this.#memoRepository.delete(memoId);
   }
 
-  async #inputMemo() {
+  async #addMemo() {
     const body = await this.#buildBody();
     await this.#memoRepository.add(body);
   }
 
   async #runPrompt(memos, message) {
     const choices = this.#buildChoices(memos);
-    const prompt = this.#buildPrompt(
-      choices,
-      message
-    );
+    const prompt = this.#buildPrompt(choices, message);
 
     return await prompt.run();
   }
 
   #buildChoices(memos) {
-    return memos.map(memo => {
+    return memos.map((memo) => {
       return {
-        message: memo.headOfLine,
-        name: memo.id
+        message: memo.firstLine,
+        name: memo.id,
       };
-    })
+    });
   }
 
-  #buildPrompt(memos, text) {
+  #buildPrompt(choices, text) {
     return new Select({
       name: "memo",
       message: text,
-      choices: memos,
+      choices: choices,
     });
   }
 

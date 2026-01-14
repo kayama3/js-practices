@@ -6,7 +6,9 @@ export default class MemoRepository {
   }
 
   createTable() {
-    return this.#sqliteClient.run("CREATE TABLE IF NOT EXISTS memos (id INTEGER PRIMARY KEY, body TEXT NOT NULL)");
+    return this.#sqliteClient.run(
+      "CREATE TABLE IF NOT EXISTS memos (id INTEGER PRIMARY KEY, body TEXT NOT NULL)"
+    );
   }
 
   add(body) {
@@ -14,7 +16,10 @@ export default class MemoRepository {
   }
 
   get(memoId) {
-    return this.#sqliteClient.get("SELECT * FROM memos WHERE id = ? ORDER BY id", memoId);
+    return this.#sqliteClient.get(
+      "SELECT * FROM memos WHERE id = ? ORDER BY id",
+      memoId
+    );
   }
 
   all() {
