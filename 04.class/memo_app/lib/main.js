@@ -78,16 +78,23 @@ export default class Main {
   }
 
   async #referenceMemo(memos) {
-    const memoId = await this.#runReferencePrompt(memos);
+    const message = "Choose a memo you want to see:";
+    const memoId = await this.#runPrompt(memos, message);
     const memo = await this.#memoRepository.get(memoId);
     console.log(memo.body);
   }
 
-  async #runReferencePrompt(memos) {
+  async #deleteMemo(memos) {
+    const message = "Choose a memo you want to delete:";
+    const memoId = await this.#runPrompt(memos, message);
+    await this.#memoRepository.delete(memoId);
+  }
+
+  async #runPrompt(memos, message) {
     const choices = this.#buildChoices(memos);
-    const prompt = await this.#buildReferencePrompt(
+    const prompt = this.#buildPrompt(
       choices,
-      "Choose a memo you want to see:"
+      message
     );
 
     return await prompt.run();
@@ -100,40 +107,13 @@ export default class Main {
       choices.push({
         message: memo.headOfLine,
         name: memo.id,
-        value: memo.body,
       });
     });
 
     return choices;
   }
 
-  #buildReferencePrompt(memos, text) {
-    return new Select({
-      name: "memo",
-      message: text,
-      choices: memos,
-      footer() {
-        return "\n" + memos[this.index]["value"];
-      },
-    });
-  }
-
-  async #deleteMemo(memos) {
-    const memoId = await this.#runDeletePrompt(memos);
-    await this.#memoRepository.delete(memoId);
-  }
-
-  async #runDeletePrompt(memos) {
-    const choices = this.#buildChoices(memos);
-    const prompt = this.#buildDeletePrompt(
-      choices,
-      "Choose a memo you want to delete:"
-    );
-
-    return await prompt.run();
-  }
-
-  #buildDeletePrompt(memos, text) {
+  #buildPrompt(memos, text) {
     return new Select({
       name: "memo",
       message: text,
