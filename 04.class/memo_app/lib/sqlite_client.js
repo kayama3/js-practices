@@ -26,10 +26,10 @@ export default class SqliteClient {
   #promisify(api, ...args) {
     return new Promise((resolve, reject) =>
       this.#database[api](...args, (error, value) => {
-        if (!error) {
-          resolve(value);
-        } else {
+        if (error) {
           reject(error);
+        } else {
+          resolve(value);
         }
       })
     );
