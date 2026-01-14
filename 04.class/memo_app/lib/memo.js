@@ -16,14 +16,6 @@ export default class Memo {
   }
 
   get headOfLine() {
-    return this.#sliceBody();
-  }
-
-  #sliceBody() {
-    if (this.#body.includes("\n")) {
-      return this.#body.slice(0, this.#body.indexOf("\n"));
-    } else {
-      return this.#body;
-    }
+    return this.#body.split("\n")[0];
   }
 }
