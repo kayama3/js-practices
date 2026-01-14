@@ -1,8 +1,8 @@
 import readline from "node:readline/promises";
 import Enquirer from "enquirer";
+import minimist from "minimist";
 import Memo from "./memo.js";
 const { Select } = Enquirer;
-import minimist from "minimist";
 
 export default class Main {
   #database;
@@ -14,7 +14,6 @@ export default class Main {
   }
 
   async exec() {
-    const opts = this.#parseOptions();
     await this.#memoRepository.createTable();
     const records = await this.#memoRepository.all();
     const memos = records.map((row) => {
@@ -25,6 +24,8 @@ export default class Main {
       console.log("This app does not contain any memo.");
       console.log("Please create a memo.");
     }
+
+    const opts = this.#parseOptions();
 
     if (opts.l) {
       await this.#listHeadOfLine(memos);
@@ -49,28 +50,6 @@ export default class Main {
     })
   }
 
-  async #inputMemo() {
-    const body = await this.#buildBody();
-    await this.#memoRepository.add(body);
-  }
-
-  #buildBody() {
-    const lines = [];
-    const rl = readline.createInterface({
-      input: process.stdin,
-    });
-
-    return new Promise((resolve) => {
-      rl.on("line", (line) => {
-        lines.push(line);
-      });
-
-      rl.on("close", () => {
-        resolve(lines.join("\n"));
-      });
-    });
-  }
-
   async #listHeadOfLine(memos) {
     memos.forEach((memo) => {
       console.log(memo.headOfLine);
@@ -88,6 +67,11 @@ export default class Main {
     const message = "Choose a memo you want to delete:";
     const memoId = await this.#runPrompt(memos, message);
     await this.#memoRepository.delete(memoId);
+  }
+
+  async #inputMemo() {
+    const body = await this.#buildBody();
+    await this.#memoRepository.add(body);
   }
 
   async #runPrompt(memos, message) {
@@ -118,6 +102,23 @@ export default class Main {
       name: "memo",
       message: text,
       choices: memos,
+    });
+  }
+
+  #buildBody() {
+    const lines = [];
+    const rl = readline.createInterface({
+      input: process.stdin,
+    });
+
+    return new Promise((resolve) => {
+      rl.on("line", (line) => {
+        lines.push(line);
+      });
+
+      rl.on("close", () => {
+        resolve(lines.join("\n"));
+      });
     });
   }
 }
