@@ -85,16 +85,12 @@ export default class Main {
   }
 
   #buildChoices(memos) {
-    const choices = [];
-
-    memos.forEach((memo) => {
-      choices.push({
+    return memos.map(memo => {
+      return {
         message: memo.headOfLine,
-        name: memo.id,
-      });
-    });
-
-    return choices;
+        name: memo.id
+      };
+    })
   }
 
   #buildPrompt(memos, text) {
