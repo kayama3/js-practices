@@ -21,13 +21,14 @@ export default class Main {
     const memos = records.map((row) => {
       return new Memo(row.id, row.body);
     });
+    const opts = this.#parseOptions();
 
-    if (memos.length === 0) {
+    if (memos.length === 0 && (opts.l || opts.r || opts.d)) {
       console.log("This app does not contain any memo.");
       console.log("Please create a memo.");
+      await this.#database.close();
+      return;
     }
-
-    const opts = this.#parseOptions();
 
     if (opts.l) {
       await this.#listFirstLine(memos);
