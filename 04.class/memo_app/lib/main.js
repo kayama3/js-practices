@@ -21,20 +21,20 @@ export default class Main {
     const memos = records.map((row) => {
       return new Memo(row.id, row.body);
     });
-    const opts = this.#parseOptions();
+    const options = this.#parseOptions();
 
-    if (memos.length === 0 && (opts.l || opts.r || opts.d)) {
+    if (memos.length === 0 && (options.l || options.r || options.d)) {
       console.log("This app does not contain any memo.");
       console.log("Please create a memo.");
       await this.#database.close();
       return;
     }
 
-    if (opts.l) {
+    if (options.l) {
       await this.#listFirstLine(memos);
-    } else if (opts.r) {
+    } else if (options.r) {
       await this.#referenceMemo(memos);
-    } else if (opts.d) {
+    } else if (options.d) {
       await this.#deleteMemo(memos);
     } else {
       await this.#addMemo();

@@ -1,32 +1,32 @@
 export default class MemoRepository {
-  #sqliteClient;
+  #database;
 
-  constructor(sqliteClient) {
-    this.#sqliteClient = sqliteClient;
+  constructor(database) {
+    this.#database = database;
   }
 
   createTable() {
-    return this.#sqliteClient.run(
+    return this.#database.run(
       "CREATE TABLE IF NOT EXISTS memos (id INTEGER PRIMARY KEY, body TEXT NOT NULL)"
     );
   }
 
   add(body) {
-    return this.#sqliteClient.run("INSERT INTO memos (body) VALUES (?)", body);
+    return this.#database.run("INSERT INTO memos (body) VALUES (?)", body);
   }
 
-  get(memoId) {
-    return this.#sqliteClient.get(
+  get(id) {
+    return this.#database.get(
       "SELECT * FROM memos WHERE id = ? ORDER BY id",
-      memoId
+      id
     );
   }
 
   all() {
-    return this.#sqliteClient.all("SELECT * FROM memos ORDER BY id");
+    return this.#database.all("SELECT * FROM memos ORDER BY id");
   }
 
-  delete(memoId) {
-    return this.#sqliteClient.run("DELETE FROM memos WHERE id = ?", memoId);
+  delete(id) {
+    return this.#database.run("DELETE FROM memos WHERE id = ?", id);
   }
 }
