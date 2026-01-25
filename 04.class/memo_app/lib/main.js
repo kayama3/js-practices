@@ -81,7 +81,12 @@ export default class Main {
     const choices = this.#buildChoices(memos);
     const prompt = this.#buildPrompt(choices, message);
 
-    return await prompt.run();
+    return await prompt.run().catch((error) => {
+      if (error === "") {
+        process.exit(0);
+      }
+      throw error;
+    });
   }
 
   #buildChoices(memos) {
