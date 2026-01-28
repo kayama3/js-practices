@@ -62,6 +62,7 @@ export default class Main {
   async #referenceMemo(memos) {
     const message = "Choose a memo you want to see:";
     const memoId = await this.#runPrompt(memos, message);
+    if (memoId === false) return;
     const memo = await this.#memoRepository.select(memoId);
     console.log(memo.body);
   }
@@ -69,6 +70,7 @@ export default class Main {
   async #deleteMemo(memos) {
     const message = "Choose a memo you want to delete:";
     const memoId = await this.#runPrompt(memos, message);
+    if (memoId === false) return;
     await this.#memoRepository.delete(memoId);
   }
 
@@ -82,10 +84,7 @@ export default class Main {
     const prompt = this.#buildPrompt(choices, message);
 
     return await prompt.run().catch((error) => {
-      if (error === "") {
-        process.exit(0);
-      }
-      throw error;
+      if (error === "") return false;
     });
   }
 
