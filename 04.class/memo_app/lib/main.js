@@ -31,7 +31,7 @@ export default class Main {
     }
 
     if (options.l) {
-      await this.#listFirstLine(memos);
+      this.#listFirstLine(memos);
     } else if (options.r) {
       await this.#referenceMemo(memos);
     } else if (options.d) {
@@ -53,7 +53,7 @@ export default class Main {
     });
   }
 
-  async #listFirstLine(memos) {
+  #listFirstLine(memos) {
     memos.forEach((memo) => {
       console.log(memo.firstLine);
     });
@@ -79,11 +79,11 @@ export default class Main {
     await this.#memoRepository.insert(body);
   }
 
-  async #runPrompt(memos, message) {
+  #runPrompt(memos, message) {
     const choices = this.#buildChoices(memos);
     const prompt = this.#buildPrompt(choices, message);
 
-    return await prompt.run().catch((error) => {
+    return prompt.run().catch((error) => {
       if (error === "") return false;
     });
   }
