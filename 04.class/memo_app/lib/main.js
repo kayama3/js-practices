@@ -17,7 +17,7 @@ export default class Main {
 
   async exec() {
     await this.#memoRepository.createTable();
-    const records = await this.#memoRepository.all();
+    const records = await this.#memoRepository.selectAll();
     const memos = records.map((row) => {
       return new Memo(row.id, row.body);
     });
@@ -62,7 +62,7 @@ export default class Main {
   async #referenceMemo(memos) {
     const message = "Choose a memo you want to see:";
     const memoId = await this.#runPrompt(memos, message);
-    const memo = await this.#memoRepository.get(memoId);
+    const memo = await this.#memoRepository.select(memoId);
     console.log(memo.body);
   }
 
@@ -74,7 +74,7 @@ export default class Main {
 
   async #addMemo() {
     const body = await this.#buildBody();
-    await this.#memoRepository.add(body);
+    await this.#memoRepository.insert(body);
   }
 
   async #runPrompt(memos, message) {

@@ -11,18 +11,18 @@ export default class MemoRepository {
     );
   }
 
-  add(body) {
+  insert(body) {
     return this.#database.run("INSERT INTO memos (body) VALUES (?)", body);
   }
 
-  get(id) {
+  select(id) {
     return this.#database.get(
       "SELECT * FROM memos WHERE id = ? ORDER BY id",
       id
     );
   }
 
-  all() {
+  selectAll() {
     return this.#database.all("SELECT * FROM memos ORDER BY id");
   }
 
