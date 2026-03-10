@@ -2,8 +2,6 @@ import readline from "node:readline/promises";
 import Enquirer from "enquirer";
 import minimist from "minimist";
 
-import Memo from "./memo.js";
-
 const { Select } = Enquirer;
 
 export default class Main {
@@ -17,10 +15,7 @@ export default class Main {
 
   async exec() {
     await this.#memoRepository.createTable();
-    const records = await this.#memoRepository.selectAll();
-    const memos = records.map((row) => {
-      return new Memo(row.id, row.body);
-    });
+    const memos = await this.#memoRepository.selectAll();
     const options = this.#parseOptions();
 
     if (memos.length === 0 && (options.l || options.r || options.d)) {

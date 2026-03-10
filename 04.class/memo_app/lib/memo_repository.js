@@ -1,3 +1,5 @@
+import Memo from "./memo.js";
+
 export default class MemoRepository {
   #database;
 
@@ -15,15 +17,19 @@ export default class MemoRepository {
     return this.#database.run("INSERT INTO memos (body) VALUES (?)", body);
   }
 
-  select(id) {
-    return this.#database.get(
+  async select(id) {
+    const record = await this.#database.get(
       "SELECT * FROM memos WHERE id = ? ORDER BY id",
       id
     );
+    return new Memo(record.id, record.body);
   }
 
-  selectAll() {
-    return this.#database.all("SELECT * FROM memos ORDER BY id");
+  async selectAll() {
+    const records = await this.#database.all("SELECT * FROM memos ORDER BY id");
+    return records.map((row) => {
+      return new Memo(row.id, row.body);
+    });
   }
 
   delete(id) {
