@@ -15,8 +15,7 @@ const memos = await memoRepository.selectAll();
 const options = parseOptions();
 
 if (memos.length === 0 && (options.l || options.r || options.d)) {
-  console.log("This app does not contain any memo.");
-  console.log("Please create a memo.");
+  console.log("No memos found.\nRun without options to add a memo.");
 } else if (options.l) {
   memoApp.listFirstLine(memos);
 } else if (options.r) {
