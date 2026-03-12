@@ -27,9 +27,7 @@ export default class MemoRepository {
 
   async selectAll() {
     const records = await this.#database.all("SELECT * FROM memos ORDER BY id");
-    return records.map((row) => {
-      return new Memo(row.id, row.body);
-    });
+    return records.map((row) => new Memo(row.id, row.body));
   }
 
   delete(id) {

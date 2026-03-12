@@ -52,12 +52,7 @@ export default class MemoApp {
   }
 
   #buildChoices(memos) {
-    return memos.map((memo) => {
-      return {
-        message: memo.firstLine,
-        name: memo.id,
-      };
-    });
+    return memos.map((memo) => ({ message: memo.firstLine, name: memo.id }));
   }
 
   #buildPrompt(choices, text) {
