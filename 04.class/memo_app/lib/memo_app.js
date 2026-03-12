@@ -40,15 +40,17 @@ export default class MemoApp {
     await this.#memoRepository.insert(body);
   }
 
-  #runPrompt(memos, message) {
+  async #runPrompt(memos, message) {
     const choices = this.#buildChoices(memos);
     const prompt = this.#buildPrompt(choices, message);
 
-    return prompt.run().catch((error) => {
+    try {
+      return await prompt.run();
+    } catch (error) {
       if (error === "") {
         return false;
       }
-    });
+    }
   }
 
   #buildChoices(memos) {
