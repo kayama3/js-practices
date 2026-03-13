@@ -6,8 +6,8 @@ import MemoApp from "../lib/memo_app.js";
 import SqliteClient from "../lib/sqlite_client.js";
 import MemoRepository from "../lib/memo_repository.js";
 
-const database = new SqliteClient();
-const memoRepository = new MemoRepository(database);
+const sqliteClient = new SqliteClient();
+const memoRepository = new MemoRepository(sqliteClient);
 const memoApp = new MemoApp(memoRepository);
 
 await memoRepository.createTable();
@@ -26,7 +26,7 @@ if (memos.length === 0 && (options.l || options.r || options.d)) {
   await memoApp.addMemo();
 }
 
-await database.close();
+await sqliteClient.close();
 
 function parseOptions() {
   return minimist(process.argv.slice(2), {
