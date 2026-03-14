@@ -7,16 +7,16 @@ export default class SqliteClient {
     this.#database = new sqlite3.Database(path);
   }
 
-  run(sql, param) {
-    return this.#promisify("run", sql, param);
+  run(sql, ...params) {
+    return this.#promisify("run", sql, ...params);
   }
 
-  get(sql, param) {
-    return this.#promisify("get", sql, param);
+  get(sql, ...params) {
+    return this.#promisify("get", sql, ...params);
   }
 
-  all(sql) {
-    return this.#promisify("all", sql);
+  all(sql, ...params) {
+    return this.#promisify("all", sql, ...params);
   }
 
   close() {
@@ -25,11 +25,15 @@ export default class SqliteClient {
 
   #promisify(api, ...args) {
     return new Promise((resolve, reject) =>
-      this.#database[api](...args, (error, value) => {
+      this.#database[api](...args, function (error, value) {
         if (error) {
           reject(error);
         } else {
-          resolve(value);
+          resolve(
+            api === "run"
+              ? { lastID: this.lastID, changes: this.changes }
+              : value
+          );
         }
       })
     );
