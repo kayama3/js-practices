@@ -19,7 +19,7 @@ export default class MemoRepository {
 
   async select(id) {
     const record = await this.#database.get(
-      "SELECT * FROM memos WHERE id = ? ORDER BY id",
+      "SELECT * FROM memos WHERE id = ?",
       id
     );
     return new Memo(record.id, record.body);
