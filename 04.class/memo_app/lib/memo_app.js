@@ -22,7 +22,7 @@ export default class MemoApp {
     if (memoId === null) {
       return;
     }
-    const memo = await this.#memoRepository.select(memoId);
+    const memo = memos.find((memo) => memo.id === memoId);
     console.log(memo.body);
   }
 
