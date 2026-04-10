@@ -11,10 +11,6 @@ export default class SqliteClient {
     return this.#promisify("run", sql, ...params);
   }
 
-  get(sql, ...params) {
-    return this.#promisify("get", sql, ...params);
-  }
-
   all(sql, ...params) {
     return this.#promisify("all", sql, ...params);
   }
