@@ -41,8 +41,14 @@ export default class MemoApp {
   }
 
   async #runPrompt(memos, message) {
-    const choices = this.#buildChoices(memos);
-    const prompt = this.#buildPrompt(choices, message);
+    const prompt = new Select({
+      name: "memo",
+      message,
+      choices: memos.map((memo) => ({
+        message: memo.firstLine,
+        name: memo.id,
+      })),
+    });
 
     try {
       return await prompt.run();
@@ -51,18 +57,6 @@ export default class MemoApp {
         return null;
       }
     }
-  }
-
-  #buildChoices(memos) {
-    return memos.map((memo) => ({ message: memo.firstLine, name: memo.id }));
-  }
-
-  #buildPrompt(choices, text) {
-    return new Select({
-      name: "memo",
-      message: text,
-      choices: choices,
-    });
   }
 
   #buildBody() {
