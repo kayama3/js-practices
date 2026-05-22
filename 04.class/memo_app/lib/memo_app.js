@@ -18,21 +18,20 @@ export default class MemoApp {
 
   async referenceMemo(memos) {
     const message = "Choose a memo you want to see:";
-    const memoId = await this.#runPrompt(memos, message);
-    if (memoId === null) {
+    const memo = await this.#runPrompt(memos, message);
+    if (memo === null) {
       return;
     }
-    const memo = memos.find((memo) => memo.id === memoId);
     console.log(memo.body);
   }
 
   async deleteMemo(memos) {
     const message = "Choose a memo you want to delete:";
-    const memoId = await this.#runPrompt(memos, message);
-    if (memoId === null) {
+    const memo = await this.#runPrompt(memos, message);
+    if (memo === null) {
       return;
     }
-    await this.#memoRepository.delete(memoId);
+    await this.#memoRepository.delete(memo.id);
   }
 
   async addMemo() {
@@ -45,9 +44,12 @@ export default class MemoApp {
       name: "memo",
       message,
       choices: memos.map((memo) => ({
-        message: memo.firstLine,
-        name: memo.id,
+        name: memo.firstLine,
+        value: memo,
       })),
+      result() {
+        return this.focused.value;
+      },
     });
 
     try {
