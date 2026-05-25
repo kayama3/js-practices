@@ -11,17 +11,14 @@ const memoRepository = new MemoRepository(sqliteClient);
 const memoApp = new MemoApp(memoRepository);
 
 await memoRepository.createTable();
-const memos = await memoRepository.selectAll();
 const options = parseOptions();
 
-if (memos.length === 0 && (options.l || options.r || options.d)) {
-  console.log("No memos found.\nRun without options to add a memo.");
-} else if (options.l) {
-  memoApp.listFirstLine(memos);
+if (options.l) {
+  await memoApp.listFirstLine();
 } else if (options.r) {
-  await memoApp.referenceMemo(memos);
+  await memoApp.referenceMemo();
 } else if (options.d) {
-  await memoApp.deleteMemo(memos);
+  await memoApp.deleteMemo();
 } else {
   await memoApp.addMemo();
 }

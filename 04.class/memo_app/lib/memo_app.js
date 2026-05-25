@@ -10,14 +10,24 @@ export default class MemoApp {
     this.#memoRepository = memoRepository;
   }
 
-  listFirstLine(memos) {
+  async listFirstLine() {
+    const memos = await this.#getAllMemos();
+    if (memos.length === 0) {
+      console.log("No memos found.\nRun without options to add a memo.");
+      return;
+    }
     memos.forEach((memo) => {
       console.log(memo.firstLine);
     });
   }
 
-  async referenceMemo(memos) {
+  async referenceMemo() {
     const message = "Choose a memo you want to see:";
+    const memos = await this.#getAllMemos();
+    if (memos.length === 0) {
+      console.log("No memos found.\nRun without options to add a memo.");
+      return;
+    }
     const memo = await this.#runPrompt(memos, message);
     if (memo === null) {
       return;
@@ -25,8 +35,13 @@ export default class MemoApp {
     console.log(memo.body);
   }
 
-  async deleteMemo(memos) {
+  async deleteMemo() {
     const message = "Choose a memo you want to delete:";
+    const memos = await this.#getAllMemos();
+    if (memos.length === 0) {
+      console.log("No memos found.\nRun without options to add a memo.");
+      return;
+    }
     const memo = await this.#runPrompt(memos, message);
     if (memo === null) {
       return;
@@ -37,6 +52,10 @@ export default class MemoApp {
   async addMemo() {
     const body = await this.#buildBody();
     await this.#memoRepository.insert(body);
+  }
+
+  async #getAllMemos() {
+    return await this.#memoRepository.selectAll();
   }
 
   async #runPrompt(memos, message) {
