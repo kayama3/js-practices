@@ -10,6 +10,16 @@ const sqliteClient = new SqliteClient();
 const memoRepository = new MemoRepository(sqliteClient);
 const memoApp = new MemoApp(memoRepository);
 
+function parseOptions() {
+  return minimist(process.argv.slice(2), {
+    default: {
+      l: false,
+      r: false,
+      d: false,
+    },
+  });
+}
+
 await memoRepository.createTable();
 const options = parseOptions();
 
@@ -24,13 +34,3 @@ if (options.l) {
 }
 
 await sqliteClient.close();
-
-function parseOptions() {
-  return minimist(process.argv.slice(2), {
-    default: {
-      l: false,
-      r: false,
-      d: false,
-    },
-  });
-}
