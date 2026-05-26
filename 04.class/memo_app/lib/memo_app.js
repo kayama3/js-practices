@@ -13,7 +13,8 @@ export default class MemoApp {
   async listFirstLine() {
     const memos = await this.#getAllMemos();
     if (memos.length === 0) {
-      console.log("No memos found.\nRun without options to add a memo.");
+      console.log("No memos found.");
+      console.log("Run without options to add a memo");
       return;
     }
     memos.forEach((memo) => {
@@ -25,7 +26,8 @@ export default class MemoApp {
     const message = "Choose a memo you want to see:";
     const memos = await this.#getAllMemos();
     if (memos.length === 0) {
-      console.log("No memos found.\nRun without options to add a memo.");
+      console.log("No memos found.");
+      console.log("Run without options to add a memo.");
       return;
     }
     const memo = await this.#runPrompt(memos, message);
@@ -39,7 +41,8 @@ export default class MemoApp {
     const message = "Choose a memo you want to delete:";
     const memos = await this.#getAllMemos();
     if (memos.length === 0) {
-      console.log("No memos found.\nRun without options to add a memo.");
+      console.log("No memos found.");
+      console.log("Run without options to add a memo.");
       return;
     }
     const memo = await this.#runPrompt(memos, message);
