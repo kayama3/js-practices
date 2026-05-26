@@ -1,7 +1,7 @@
 import readline from "node:readline/promises";
-import Enquirer from "enquirer";
+import enquirer from "enquirer";
 
-const { Select } = Enquirer;
+const { Select } = enquirer;
 
 export default class MemoApp {
   #memoRepository;
