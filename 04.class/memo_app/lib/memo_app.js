@@ -12,9 +12,7 @@ export default class MemoApp {
 
   async listFirstLine() {
     const memos = await this.#getAllMemos();
-    if (memos.length === 0) {
-      console.log("No memos found.");
-      console.log("Run without options to add a memo");
+    if (memos === null) {
       return;
     }
     memos.forEach((memo) => {
@@ -25,9 +23,7 @@ export default class MemoApp {
   async referenceMemo() {
     const message = "Choose a memo you want to see:";
     const memos = await this.#getAllMemos();
-    if (memos.length === 0) {
-      console.log("No memos found.");
-      console.log("Run without options to add a memo.");
+    if (memos === null) {
       return;
     }
     const memo = await this.#runPrompt(memos, message);
@@ -40,9 +36,7 @@ export default class MemoApp {
   async deleteMemo() {
     const message = "Choose a memo you want to delete:";
     const memos = await this.#getAllMemos();
-    if (memos.length === 0) {
-      console.log("No memos found.");
-      console.log("Run without options to add a memo.");
+    if (memos === null) {
       return;
     }
     const memo = await this.#runPrompt(memos, message);
@@ -58,7 +52,13 @@ export default class MemoApp {
   }
 
   async #getAllMemos() {
-    return await this.#memoRepository.selectAll();
+    const memos = await this.#memoRepository.selectAll();
+    if (memos.length === 0) {
+      console.log("No memos found.");
+      console.log("Run without options to add a memo.");
+      return null;
+    }
+    return memos;
   }
 
   async #runPrompt(memos, message) {
