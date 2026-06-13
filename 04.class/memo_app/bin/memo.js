@@ -24,7 +24,7 @@ await memoRepository.createTable();
 const options = parseOptions();
 
 if (options.l) {
-  await memoApp.listFirstLine();
+  await memoApp.listFirstLines();
 } else if (options.r) {
   await memoApp.referenceMemo();
 } else if (options.d) {

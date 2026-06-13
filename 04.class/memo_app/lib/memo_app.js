@@ -10,8 +10,8 @@ export default class MemoApp {
     this.#memoRepository = memoRepository;
   }
 
-  async listFirstLine() {
-    const memos = await this.#getAllMemos();
+  async listFirstLines() {
+    const memos = await this.#getMemosOrNull();
     if (memos === null) {
       return;
     }
@@ -22,7 +22,7 @@ export default class MemoApp {
 
   async referenceMemo() {
     const message = "Choose a memo you want to see:";
-    const memos = await this.#getAllMemos();
+    const memos = await this.#getMemosOrNull();
     if (memos === null) {
       return;
     }
@@ -35,7 +35,7 @@ export default class MemoApp {
 
   async deleteMemo() {
     const message = "Choose a memo you want to delete:";
-    const memos = await this.#getAllMemos();
+    const memos = await this.#getMemosOrNull();
     if (memos === null) {
       return;
     }
@@ -47,11 +47,11 @@ export default class MemoApp {
   }
 
   async addMemo() {
-    const body = await this.#buildBody();
-    await this.#memoRepository.insert(body);
+    const memo = await this.#readFromStdin();
+    await this.#memoRepository.insert(memo);
   }
 
-  async #getAllMemos() {
+  async #getMemosOrNull() {
     const memos = await this.#memoRepository.selectAll();
     if (memos.length === 0) {
       console.log("No memos found.");
@@ -83,7 +83,7 @@ export default class MemoApp {
     }
   }
 
-  #buildBody() {
+  #readFromStdin() {
     const lines = [];
     const rl = readline.createInterface({
       input: process.stdin,
