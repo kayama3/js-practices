@@ -6,7 +6,7 @@ import MemoApp from "../lib/memo_app.js";
 import SqliteClient from "../lib/sqlite_client.js";
 import MemoRepository from "../lib/memo_repository.js";
 
-const sqliteClient = new SqliteClient();
+const sqliteClient = new SqliteClient("./memo.db");
 const memoRepository = new MemoRepository(sqliteClient);
 const memoApp = new MemoApp(memoRepository);
 

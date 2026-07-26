@@ -3,7 +3,7 @@ import sqlite3 from "sqlite3";
 export default class SqliteClient {
   #database;
 
-  constructor(path = "./memo.db") {
+  constructor(path) {
     this.#database = new sqlite3.Database(path);
   }
 
