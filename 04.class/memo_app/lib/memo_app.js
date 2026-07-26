@@ -79,6 +79,8 @@ export default class MemoApp {
     } catch (error) {
       if (error === "") {
         return null;
+      } else {
+        throw error;
       }
     }
   }
