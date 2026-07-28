@@ -25,4 +25,8 @@ export default class MemoRepository {
   delete(id) {
     return this.#database.run("DELETE FROM memos WHERE id = ?", id);
   }
+
+  close() {
+    return this.#database.close();
+  }
 }

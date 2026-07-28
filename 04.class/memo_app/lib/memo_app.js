@@ -1,3 +1,4 @@
+import minimist from "minimist";
 import readline from "node:readline/promises";
 import enquirer from "enquirer";
 
@@ -10,7 +11,34 @@ export default class MemoApp {
     this.#memoRepository = memoRepository;
   }
 
-  async listFirstLines() {
+  async run(argv) {
+    await this.#memoRepository.createTable();
+    const options = this.#parseOptions(argv);
+
+    if (options.l) {
+      await this.#listFirstLines();
+    } else if (options.r) {
+      await this.#referenceMemo();
+    } else if (options.d) {
+      await this.#deleteMemo();
+    } else {
+      await this.#addMemo();
+    }
+
+    await this.#memoRepository.close();
+  }
+
+  #parseOptions(argv) {
+    return minimist(argv, {
+      default: {
+        l: false,
+        r: false,
+        d: false,
+      },
+    });
+  }
+
+  async #listFirstLines() {
     const memos = await this.#getMemosOrNull();
     if (memos === null) {
       return;
@@ -20,7 +48,7 @@ export default class MemoApp {
     });
   }
 
-  async referenceMemo() {
+  async #referenceMemo() {
     const message = "Choose a memo you want to see:";
     const memos = await this.#getMemosOrNull();
     if (memos === null) {
@@ -33,7 +61,7 @@ export default class MemoApp {
     console.log(memo.body);
   }
 
-  async deleteMemo() {
+  async #deleteMemo() {
     const message = "Choose a memo you want to delete:";
     const memos = await this.#getMemosOrNull();
     if (memos === null) {
@@ -46,7 +74,7 @@ export default class MemoApp {
     await this.#memoRepository.delete(memo.id);
   }
 
-  async addMemo() {
+  async #addMemo() {
     const memo = await this.#readFromStdin();
     await this.#memoRepository.insert(memo);
   }
