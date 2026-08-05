@@ -39,7 +39,7 @@ export default class MemoApp {
   }
 
   async #listFirstLines() {
-    const memos = await this.#getMemosOrNull();
+    const memos = await this.#findMemosOrNull();
     if (memos === null) {
       return;
     }
@@ -50,7 +50,7 @@ export default class MemoApp {
 
   async #referenceMemo() {
     const message = "Choose a memo you want to see:";
-    const memos = await this.#getMemosOrNull();
+    const memos = await this.#findMemosOrNull();
     if (memos === null) {
       return;
     }
@@ -63,7 +63,7 @@ export default class MemoApp {
 
   async #deleteMemo() {
     const message = "Choose a memo you want to delete:";
-    const memos = await this.#getMemosOrNull();
+    const memos = await this.#findMemosOrNull();
     if (memos === null) {
       return;
     }
@@ -79,7 +79,7 @@ export default class MemoApp {
     await this.#memoRepository.insert(memo);
   }
 
-  async #getMemosOrNull() {
+  async #findMemosOrNull() {
     const memos = await this.#memoRepository.selectAll();
     if (memos.length === 0) {
       console.log("No memos found.");
