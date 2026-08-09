@@ -49,11 +49,11 @@ export default class MemoApp {
   }
 
   async #referenceMemo() {
-    const message = "Choose a memo you want to see:";
     const memos = await this.#memoRepository.selectAll();
     if (this.#warnIfEmpty(memos)) {
       return;
     }
+    const message = "Choose a memo you want to see:";
     const memo = await this.#runPrompt(memos, message);
     if (memo === null) {
       return;
@@ -62,11 +62,11 @@ export default class MemoApp {
   }
 
   async #deleteMemo() {
-    const message = "Choose a memo you want to delete:";
     const memos = await this.#memoRepository.selectAll();
     if (this.#warnIfEmpty(memos)) {
       return;
     }
+    const message = "Choose a memo you want to delete:";
     const memo = await this.#runPrompt(memos, message);
     if (memo === null) {
       return;
