@@ -39,8 +39,8 @@ export default class MemoApp {
   }
 
   async #listFirstLines() {
-    const memos = await this.#findMemosOrNull();
-    if (memos === null) {
+    const memos = await this.#memoRepository.selectAll();
+    if (this.#warnIfEmpty(memos)) {
       return;
     }
     memos.forEach((memo) => {
@@ -50,8 +50,8 @@ export default class MemoApp {
 
   async #referenceMemo() {
     const message = "Choose a memo you want to see:";
-    const memos = await this.#findMemosOrNull();
-    if (memos === null) {
+    const memos = await this.#memoRepository.selectAll();
+    if (this.#warnIfEmpty(memos)) {
       return;
     }
     const memo = await this.#runPrompt(memos, message);
@@ -63,8 +63,8 @@ export default class MemoApp {
 
   async #deleteMemo() {
     const message = "Choose a memo you want to delete:";
-    const memos = await this.#findMemosOrNull();
-    if (memos === null) {
+    const memos = await this.#memoRepository.selectAll();
+    if (this.#warnIfEmpty(memos)) {
       return;
     }
     const memo = await this.#runPrompt(memos, message);
@@ -79,14 +79,13 @@ export default class MemoApp {
     await this.#memoRepository.insert(memo);
   }
 
-  async #findMemosOrNull() {
-    const memos = await this.#memoRepository.selectAll();
+  #warnIfEmpty(memos) {
     if (memos.length === 0) {
       console.log("No memos found.");
       console.log("Run without options to add a memo.");
-      return null;
+      return true;
     }
-    return memos;
+    return false;
   }
 
   async #runPrompt(memos, message) {
