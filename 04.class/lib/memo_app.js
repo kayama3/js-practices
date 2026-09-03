@@ -75,8 +75,8 @@ export default class MemoApp {
   }
 
   async #addMemo() {
-    const memo = await this.#readFromStdin();
-    await this.#memoRepository.insert(memo);
+    const body = await this.#readFromStdin();
+    await this.#memoRepository.insert(body);
   }
 
   #warnIfEmpty(memos) {
