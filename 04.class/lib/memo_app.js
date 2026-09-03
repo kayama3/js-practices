@@ -80,12 +80,12 @@ export default class MemoApp {
   }
 
   #warnIfEmpty(memos) {
-    if (memos.length === 0) {
-      console.log("No memos found.");
-      console.log("Run without options to add a memo.");
-      return true;
+    if (memos.length !== 0) {
+      return false;
     }
-    return false;
+    console.log("No memos found.");
+    console.log("Run without options to add a memo.");
+    return true;
   }
 
   async #runPrompt(memos, message) {
