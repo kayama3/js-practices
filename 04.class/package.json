@@ -8,5 +8,10 @@
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.7.1"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "enquirer": "^2.4.1",
+    "minimist": "^1.2.8",
+    "sqlite3": "^5.1.6"
+  }
 }
